@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import {LoginService} from "../../../../services/login.service";
 
 @Component({
     selector: 'app-login',
@@ -13,11 +14,28 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
         }
     `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+    @Input() username = '';
+    @Input() password = '';
 
     valCheck: string[] = ['remember'];
 
-    password!: string;
+    constructor(public layoutService: LayoutService,
+                private loginService: LoginService
+                ) { }
 
-    constructor(public layoutService: LayoutService) { }
+    login() {
+
+        console.log('------ username: ', this.username)
+        this.loginService.login(this.username, this.password).subscribe({
+            next: (response: any) => {
+                console.log('-------- login response: ', response)
+            },
+            complete: () => {},
+            error: err => {}
+        })
+    }
+
+    ngOnInit(): void {
+    }
 }
