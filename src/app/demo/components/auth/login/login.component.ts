@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import {LoginService} from "../../../../services/login.service";
 
@@ -21,15 +22,15 @@ export class LoginComponent implements OnInit {
     valCheck: string[] = ['remember'];
 
     constructor(public layoutService: LayoutService,
-                private loginService: LoginService
+                private loginService: LoginService,
+                private router: Router
                 ) { }
 
     login() {
-
-        console.log('------ username: ', this.username)
         this.loginService.login(this.username, this.password).subscribe({
             next: (response: any) => {
                 console.log('-------- login response: ', response)
+                this.router.navigate(["project"])
             },
             complete: () => {},
             error: err => {}
