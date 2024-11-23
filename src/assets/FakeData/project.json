@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Kenvi",
+            "description": "rewr fgdfg sfsd",
+            "ownerId": "Tran Van B",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "id": 2,
+            "name": "Global cybersoft",
+            "description": "fsdf fsdfds",
+            "ownerId": "Nguyen Van B",
+            "createdAt": "",
+            "updatedAt": ""
+        },
+        {
+            "id": 3,
+            "name": "GoSell",
+            "description": "dsf efsd sdfdsf",
+            "ownerId": "Hoang Thi C",
+            "createdAt": "",
+            "updatedAt": ""
+        }
+    ]
+}
