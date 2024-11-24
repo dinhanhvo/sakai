@@ -49,17 +49,17 @@
                             {{project.name}}
                         </td>
                         <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Category</span>
+                            <span class="p-column-title">description</span>
                             {{project.description}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.ownerId}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">owner</span>
+                            {{project.owner}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.createdAt}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">createdAt</span>
+                            {{project.createdAt | date: 'short'}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.updatedAt}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">updatedAt</span>
+                            {{project.updatedAt | date: 'medium'}}
                         </td>
                         <td>
                             <div class="flex">
@@ -83,7 +83,6 @@
                     <label for="description">Description</label>
                     <textarea id="description" pInputTextarea [(ngModel)]="project.description" required rows="3" cols="20"></textarea>
                 </div>
-
             </ng-template>
 
             <ng-template pTemplate="footer">

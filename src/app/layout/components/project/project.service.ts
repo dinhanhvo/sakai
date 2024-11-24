@@ -1,39 +1,39 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Project} from "../../../model/project";
+import {BaseService} from "../../../services/base.service";
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-    constructor(private http: HttpClient) { }
+    private API_PROJECT = '/project'
 
-    getProjectsSmall() {
-        return this.http.get<any>('assets/demo/data/products-small.json')
-            .toPromise()
-            .then(res => res.data as Project[])
-            .then(data => data);
-    }
+    constructor(private http: HttpClient,
+                private baseService: BaseService) { }
 
+    // getProjects() {
+    //     return this.http.get<any>('assets/FakeData/project.json')
+    //         .toPromise()
+    //         .then(res => res.data as Project[])
+    //         .then(data => data);
+    // }
     getProjects() {
-        return this.http.get<any>('assets/FakeData/project.json')
-            .toPromise()
-            .then(res => res.data as Project[])
-            .then(data => data);
+        return this.baseService.getData('/projects');
     }
 
-    getProjectsMixed() {
-        return this.http.get<any>('assets/demo/data/products-mixed.json')
-            .toPromise()
-            .then(res => res.data as Project[])
-            .then(data => data);
+    public newProject(project: Project) {
+        return this.baseService.postData(this.API_PROJECT, project)
     }
 
-    getProjectsWithOrdersSmall() {
-        return this.http.get<any>('assets/demo/data/products-orders-small.json')
-            .toPromise()
-            .then(res => res.data as Project[])
-            .then(data => data);
+    public updateProject(project: Project) {
+        return this.baseService.putData(`${this.API_PROJECT}` + '/' + `${project.id}`, project)
+    }
+
+    public deleteProject(id: number) {
+        return this.baseService.deleteData(`${this.API_PROJECT}` + '/' + `${id}`)
     }
 }

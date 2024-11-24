@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ButtonModule} from "primeng/button";
-import {CurrencyPipe, NgClass, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgClass, NgIf} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {DropdownModule} from "primeng/dropdown";
 import {FileUploadModule} from "primeng/fileupload";
@@ -39,7 +39,8 @@ import {ProjectService} from "./project.service";
         TableModule,
         ToastModule,
         ToolbarModule,
-        NgClass
+        NgClass,
+        DatePipe
     ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss',
@@ -70,7 +71,17 @@ export class ProjectComponent implements OnInit {
     constructor(private projectService: ProjectService, private messageService: MessageService) { }
 
     ngOnInit() {
-        this.projectService.getProjects().then(data => this.projects = data);
+        this.projectService.getProjects().subscribe({
+            next: (response: any) => {
+                console.log('-------- login response: ', response)
+                this.projects = response
+                this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
+            },
+            complete: () => {},
+            error: err => {}
+        })
+
+        // then(data => this.projects = data);
 
         this.cols = [
             { field: 'name', header: 'Name' },
@@ -108,17 +119,33 @@ export class ProjectComponent implements OnInit {
     }
 
     confirmDeleteSelected() {
-        this.deleteProjectsDialog = false;
         this.projects = this.projects.filter(val => !this.selectedProjects.includes(val));
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Projects Deleted', life: 3000 });
         this.selectedProjects = [];
+        this.deleteProjectsDialog = false;
     }
 
     confirmDelete() {
-        this.deleteProjectDialog = false;
-        this.projects = this.projects.filter(val => val.id !== this.project.id);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project Deleted', life: 3000 });
-        this.project = {};
+        this.projectService.deleteProject(this.project.id).subscribe({
+            next: (response: any) => {
+                console.log('-------- project response: ', response)
+                let pro: Project = response
+
+                // this.projects[this.findIndexById(this.project.id)] = pro
+                this.projects.splice(this.findIndexById(this.project.id), 0)
+                this.projects = this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project deleted', life: 3000 });
+                this.projectDialog = false;
+            },
+            complete: () => {
+                this.projectDialog = false;
+                this.project = {};
+            },
+            error: err => {
+                this.projectDialog = false;
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Can not add project' });
+            }
+        })
     }
 
     hideDialog() {
@@ -131,27 +158,53 @@ export class ProjectComponent implements OnInit {
 
         if (this.project.name?.trim()) {
             if (this.project.id) {
-                // @ts-ignore
-                this.project.inventoryStatus = this.project.inventoryStatus.value ? this.project.inventoryStatus.value : this.project.inventoryStatus;
-                this.projects[this.findIndexById(this.project.id)] = this.project;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project Updated', life: 3000 });
+                this.projectService.updateProject(this.project).subscribe({
+                    next: (response: any) => {
+                        console.log('-------- project response: ', response)
+                        let pro: Project = response
+                        this.projects[this.findIndexById(pro.id)] = pro
+                        this.projects = this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project updated', life: 3000 });
+                    },
+                    complete: () => {
+                        this.projectDialog = false;
+                        this.project = {};
+                    },
+                    error: err => {
+                        this.projectDialog = false;
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Can not add project' });
+                    }
+                })
             } else {
-                // this.project.id = this.createId();
-                // this.project.code = this.createId();
-                // this.project.image = 'project-placeholder.svg';
-                // @ts-ignore
-                // this.project.inventoryStatus = this.project.inventoryStatus ? this.project.inventoryStatus.value : 'INSTOCK';
-                // this.projects.push(this.project);
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project Created', life: 3000 });
+                this.projectService.newProject(this.project).subscribe({
+                    next: (response: any) => {
+                        console.log('-------- project response: ', response)
+                        this.projects.push(response)
+                        this.projects = this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
+                        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project Created', life: 3000 });
+                    },
+                    complete: () => {
+                        this.projectDialog = false;
+                        this.project = {};
+                    },
+                    error: err => {
+                        this.projectDialog = false;
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Can not add project' });
+                    }
+                })
             }
-
-            this.projects = [...this.projects];
-            this.projectDialog = false;
-            this.project = {};
         }
     }
 
-    findIndexById(id: string): number {
+    compareTime(sdate1: Date, sdate2: Date) {
+        const date1 = new Date(sdate1)
+        const date2 = new Date(sdate2)
+        console.log('-------- number: ' + (typeof date1))
+        const number = date1.getTime() - date2.getTime()
+        return number;
+    }
+
+    findIndexById(id: number): number {
         let index = -1;
         for (let i = 0; i < this.projects.length; i++) {
             if (this.projects[i].id === id) {

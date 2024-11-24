@@ -1,11 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../api/product';
+import {BaseService} from "../../services/base.service";
 
 @Injectable()
 export class ProductService {
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private baseService: BaseService
+        ) { }
 
     getProductsSmall() {
         return this.http.get<any>('assets/demo/data/products-small.json')
