@@ -81,8 +81,6 @@ export class ProjectComponent implements OnInit {
             error: err => {}
         })
 
-        // then(data => this.projects = data);
-
         this.cols = [
             { field: 'name', header: 'Name' },
             { field: 'description', header: 'Description' },
@@ -90,12 +88,6 @@ export class ProjectComponent implements OnInit {
             { field: 'createdAt', header: 'Created At' },
             { field: 'updatedAt', header: 'Updated At' }
         ];
-
-            this.statuses = [
-                { label: 'INSTOCK', value: 'instock' },
-                { label: 'LOWSTOCK', value: 'lowstock' },
-                { label: 'OUTOFSTOCK', value: 'outofstock' }
-            ];
     }
 
     openNew() {
@@ -129,7 +121,6 @@ export class ProjectComponent implements OnInit {
         this.projectService.deleteProject(this.project.id).subscribe({
             next: (response: any) => {
                 console.log('-------- project response: ', response)
-                let pro: Project = response
 
                 // this.projects[this.findIndexById(this.project.id)] = pro
                 this.projects.splice(this.findIndexById(this.project.id), 0)

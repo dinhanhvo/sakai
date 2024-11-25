@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable,} from "rxjs";
 import {BaseService} from "./base.service";
 
-const API_USERS: string = '/users';
 const URI_LOGIN: string = '/auth/signin'
 
 @Injectable({

@@ -4,6 +4,7 @@ import { NotfoundComponent } from './demo/components/notfound/notfound.component
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import {LoginComponent} from "./demo/components/auth/login/login.component";
 import {ProjectComponent} from "./layout/components/project/project.component";
+import {TaskComponent} from "./layout/components/task/task.component";
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import {ProjectComponent} from "./layout/components/project/project.component";
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
                     { path: 'project', component: ProjectComponent},
+                    { path: 'task', component: TaskComponent}
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
