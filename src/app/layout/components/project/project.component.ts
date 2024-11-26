@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ButtonModule} from "primeng/button";
-import {CurrencyPipe, DatePipe, NgClass, NgIf} from "@angular/common";
+import {CurrencyPipe, DatePipe, NgClass, NgIf, NgTemplateOutlet} from "@angular/common";
 import {DialogModule} from "primeng/dialog";
 import {DropdownModule} from "primeng/dropdown";
 import {FileUploadModule} from "primeng/fileupload";
@@ -16,8 +16,16 @@ import {Table, TableModule} from "primeng/table";
 import {ToastModule} from "primeng/toast";
 import {ToolbarModule} from "primeng/toolbar";
 import {Project} from "../../../model/project";
-import {ProductService} from "../../../demo/service/product.service";
 import {ProjectService} from "./project.service";
+import {
+    AbstractControl,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators
+} from "@angular/forms";
+
 @Component({
   selector: 'app-project',
   standalone: true,
@@ -40,7 +48,9 @@ import {ProjectService} from "./project.service";
         ToastModule,
         ToolbarModule,
         NgClass,
-        DatePipe
+        DatePipe,
+        ReactiveFormsModule,
+        NgTemplateOutlet
     ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss',
@@ -67,8 +77,19 @@ export class ProjectComponent implements OnInit {
     statuses: any[] = [];
 
     rowsPerPageOptions = [5, 10, 20];
+    form: FormGroup;
 
-    constructor(private projectService: ProjectService, private messageService: MessageService) { }
+    constructor(private projectService: ProjectService,
+                private messageService: MessageService,
+                private fb: FormBuilder
+    ) {
+
+        this.form = this.fb.group({
+            username: ['', [Validators.required, Validators.minLength(4)]],
+            // description: ['', [Validators.required]],
+            // description: ['', [Validators.required, Validators.email]],
+        });
+    }
 
     ngOnInit() {
         this.projectService.getProjects().subscribe({
@@ -220,4 +241,24 @@ export class ProjectComponent implements OnInit {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
+    // Custom Validator
+    passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value || '';
+        const hasNumber = /\d/.test(value);
+        const hasUpperCase = /[A-Z]/.test(value);
+        const hasLowerCase = /[a-z]/.test(value);
+
+        if (!hasNumber || !hasUpperCase || !hasLowerCase) {
+            return { weakPassword: true };
+        }
+        return null;
+    }
+
+    submitForm() {
+        if (this.form.valid) {
+            console.log('Form Submitted Successfully!', this.form.value);
+        } else {
+            console.error('Form is invalid. Fix the errors and try again.');
+        }
+    }
 }

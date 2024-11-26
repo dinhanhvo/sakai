@@ -28,6 +28,12 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Task', icon: 'pi pi-pw pi-share-alt', routerLink: ['/task']
+                    },
+                    {
+                        label: 'Account', icon: 'pi pi-pw pi-user', routerLink: ['/account']
+                    },
+                    {
+                        label: 'Test', icon: 'pi pi-pw pi-share-alt', routerLink: ['/test']
                     }
                 ]
             },

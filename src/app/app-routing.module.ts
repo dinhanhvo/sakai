@@ -5,6 +5,8 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
 import {LoginComponent} from "./demo/components/auth/login/login.component";
 import {ProjectComponent} from "./layout/components/project/project.component";
 import {TaskComponent} from "./layout/components/task/task.component";
+import {ValidateComponent} from "./demo/components/validate/validate.component";
+import {RegisterComponent} from "./demo/components/register/register.component";
 
 @NgModule({
     imports: [
@@ -20,7 +22,9 @@ import {TaskComponent} from "./layout/components/task/task.component";
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
                     { path: 'project', component: ProjectComponent},
-                    { path: 'task', component: TaskComponent}
+                    { path: 'task', component: TaskComponent},
+                    { path: 'account', component: RegisterComponent},
+                    { path: 'test', component: ValidateComponent}
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
