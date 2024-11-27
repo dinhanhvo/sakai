@@ -26,14 +26,20 @@ export class RegisterComponent {
     isSubmitted: boolean = false;
 
     constructor(private fb: FormBuilder) {
-        this.registerForm = this.fb.group({
-            username: ['', [Validators.required, Validators.minLength(5)]],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
-        });
+        this.registerForm = this.fb.group(
+    {
+                name: ['', [Validators.required, Validators.minLength(5)]],
+                username: ['', [Validators.required, Validators.minLength(5)]],
+                email: ['', [Validators.required, Validators.email]],
+                password: ['', [Validators.required, Validators.minLength(6)]],
+            });
     }
 
     // Getter
+    get name() {
+        return this.registerForm.get('name');
+    }
+
     get username() {
         return this.registerForm.get('username');
     }
@@ -62,4 +68,5 @@ export class RegisterComponent {
         this.registerForm.reset();
         this.isSubmitted = false;
     }
+
 }

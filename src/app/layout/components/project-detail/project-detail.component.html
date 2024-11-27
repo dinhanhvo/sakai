@@ -1,0 +1,189 @@
+<div class="project-detail">
+    <h1>Project Details</h1>
+
+    <!-- Thông tin Project -->
+    <div class="project-info">
+        <div class="field">
+            <label>ID:</label>
+            <span>{{ project?.id }}</span>
+        </div>
+        <div class="field">
+            <label>Name:</label>
+            <span>{{ project?.name }}</span>
+        </div>
+        <div class="field">
+            <label>Owner:</label>
+            <span>{{ project?.owner }}</span>
+        </div>
+        <div class="field">
+            <label>Description:</label>
+            <span>{{ project?.description }}</span>
+        </div>
+        <div class="field">
+            <label>Created At:</label>
+            <span>{{ project?.createdAt | date: 'medium' }}</span>
+        </div>
+        <div class="field">
+            <label>Updated At:</label>
+            <span>{{ project?.updatedAt | date: 'medium' }}</span>
+        </div>
+    </div>
+</div>
+<p-table #dt [value]="tasks" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+         [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+         [(selection)]="selectedTasks" selectionMode="multiple" [rowHover]="true" dataKey="id">
+    <ng-template pTemplate="caption">
+
+        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 class="m-0">Manage Tasks</h5>
+
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+            <th pSortableColumn="project">Project <p-sortIcon field="project"></p-sortIcon></th>
+            <th pSortableColumn="Description">Description <p-sortIcon field="description"></p-sortIcon></th>
+            <th pSortableColumn="assignedTo">Assigned To <p-sortIcon field="assignedTo"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="createdAt">Created At <p-sortIcon field="createdAt"></p-sortIcon></th>
+            <th pSortableColumn="updatedAt">Updated At <p-sortIcon field="updatedAt"></p-sortIcon></th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-task>
+        <tr>
+            <td>
+                <p-tableCheckbox [value]="task"></p-tableCheckbox>
+            </td>
+            <td style="width:14%; min-width:10rem;">
+                <span class="p-column-title">title</span>
+                {{task.title}}
+            </td>
+            <td style="width:14%; min-width:10rem;">
+                <span class="p-column-title">project</span>
+                {{task.project}}
+            </td>
+            <td style="width:14%; min-width:10rem;">
+                <span class="p-column-title">description</span>
+                {{task.description}}
+            </td>
+            <td style="width:14%; min-width:10rem;"><span class="p-column-title">assignedTo</span>
+                {{task.assignedTo}}
+            </td>
+            <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                <span [class]="'task-badge status-' + (task.status ? task.status.toLowerCase() : '')">{{task.status}}</span>
+            </td>
+            <td style="width:14%; min-width:10rem;"><span class="p-column-title">createdAt</span>
+                {{task.createdAt | date: 'short'}}
+            </td>
+            <td style="width:14%; min-width:10rem;"><span class="p-column-title">updatedAt</span>
+                {{task.updatedAt | date: 'medium'}}
+            </td>
+            <td>
+                <div class="flex">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editTask(task)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteTask(task)"></button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<div class="my-2">
+    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+    <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedTasks()" [disabled]="!selectedTasks || !selectedTasks.length"></button>
+</div>
+
+<p-dialog [(visible)]="taskDialog" [style]="{width: '450px'}" header="Task Details" [modal]="true" class="p-fluid">
+    <ng-template pTemplate="content">
+        <!--                    <form [formGroup]="form" novalidate>-->
+        <div class="field">
+            <label for="title">Title</label>
+            <input type="text" pInputText id="title" [(ngModel)]="taskRequest.title" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !taskRequest.title}"/>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && !taskRequest.title">Title is required.</small>
+        </div>
+        <div class="field">
+            <label for="project">Project</label>
+            <p-dropdown [(ngModel)]="taskRequest.project" inputId="taskProject" optionValue="value" optionLabel="label"
+                        [options]="selectProjects" placeholder="Select">
+                <ng-template pTemplate="selectedItem">
+                    <span *ngIf="taskRequest && taskRequest.project" > {{getOptionName(taskRequest.project, selectProjects)}} </span>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                    <span >{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+            <div class="ng-dirty ng-invalid" *ngIf="selectedProjectControl?.invalid && selectedProjectControl?.touched" class="error">
+                Please select a project.
+            </div>
+        </div>
+        <div class="field">
+            <label for="status">Status</label>
+            <p-dropdown [(ngModel)]="taskRequest.status" inputId="taskStatus" optionValue="value" optionLabel="label"
+                        [options]="statuses" placeholder="Select">
+                <ng-template pTemplate="selectedItem">
+                            <span *ngIf="taskRequest && taskRequest.status"
+                                  [class]="'task-badge status-' + taskRequest.status.toString().toLowerCase()">
+                              {{taskRequest.status | uppercase}}
+                            </span>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'task-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="field">
+            <label for="assignedTo">Assigned To</label>
+            <p-dropdown [(ngModel)]="taskRequest.assignedTo" inputId="taskAssignedTo" optionValue="value" optionLabel="label"
+                        [options]="selectUsers" placeholder="Select">
+                <ng-template pTemplate="selectedItem">
+                    <span *ngIf="taskRequest && taskRequest.assignedTo" >{{getOptionName(taskRequest.assignedTo, selectUsers)}}</span>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                    <span >{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" pInputTextarea [(ngModel)]="taskRequest.description" rows="3" cols="20"></textarea>
+        </div>
+        <!--                    </form>-->
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveTask()"></button>
+    </ng-template>
+
+</p-dialog>
+
+<p-dialog [(visible)]="deleteTaskDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="taskRequest">Are you sure you want to delete <b>{{taskRequest.title}}</b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="taskDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="deleteTasksDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span>Are you sure you want to delete selected tasks?</span>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="taskDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+    </ng-template>
+</p-dialog>

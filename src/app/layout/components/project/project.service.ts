@@ -21,6 +21,10 @@ export class ProjectService {
     //         .then(res => res.data as Project[])
     //         .then(data => data);
     // }
+    getProjectsById(id: string) {
+        return this.baseService.getData(`${this.API_PROJECT}` + '/detail/' + `${id}`);
+    }
+
     getProjects() {
         return this.baseService.getData('/projects');
     }

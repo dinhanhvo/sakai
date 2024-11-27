@@ -12,7 +12,7 @@ import {RadioButtonModule} from "primeng/radiobutton";
 import {RatingModule} from "primeng/rating";
 import {RippleModule} from "primeng/ripple";
 import {MessageService, SharedModule} from "primeng/api";
-import {Table, TableModule} from "primeng/table";
+import {Table, TableModule, TableRowSelectEvent} from "primeng/table";
 import {ToastModule} from "primeng/toast";
 import {ToolbarModule} from "primeng/toolbar";
 import {Project} from "../../../model/project";
@@ -25,6 +25,7 @@ import {
     ValidationErrors,
     Validators
 } from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-project',
@@ -81,6 +82,7 @@ export class ProjectComponent implements OnInit {
 
     constructor(private projectService: ProjectService,
                 private messageService: MessageService,
+                private router: Router,
                 private fb: FormBuilder
     ) {
 
@@ -260,5 +262,19 @@ export class ProjectComponent implements OnInit {
         } else {
             console.error('Form is invalid. Fix the errors and try again.');
         }
+    }
+
+    validForm() : boolean {
+        return !this.project.name;
+    }
+
+    navigateToDetail(event: TableRowSelectEvent) {
+        const projectId = event.data.id;
+        console.log('--------', projectId)
+        this.router.navigate([`/projects/${projectId}`]);
+    }
+
+    navigateToProjectDetail(projectId: number): void {
+        this.router.navigate(['/projects', projectId]);
     }
 }

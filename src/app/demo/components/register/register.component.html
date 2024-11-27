@@ -1,6 +1,22 @@
 <!--<p-card header="Register Account" style="width: 100%; margin: 0 auto;">-->
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="p-grid">
+            <div class="field">
+                <label for="name">Name</label>
+                <input
+                    id="name"
+                    type="text"
+                    pInputText
+                    formControlName="name"
+                    [ngClass]="{'ng-invalid': isSubmitted && name.errors?.['required']}"
+                />
+                <small *ngIf="isSubmitted && name.errors?.['required']" class="p-error">
+                    Username is required.
+                </small>
+                <small *ngIf="isSubmitted && name.errors?.['minlength']" class="p-error">
+                    Name must be at least 5 characters long.
+                </small>
+            </div>
         <!-- Username -->
         <div class="field">
             <label for="username">Username</label>
