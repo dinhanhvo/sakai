@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
                 ) { }
 
     login() {
+        sessionStorage.setItem('isAuthenticated', String(true));
         this.loginService.login(this.username, this.password).subscribe({
             next: (response: any) => {
                 console.log('-------- login response: ', response)
@@ -40,6 +41,10 @@ export class LoginComponent implements OnInit {
             complete: () => {},
             error: err => {}
         })
+    }
+
+    logOut() {
+        this.appStore.logout()
     }
 
     ngOnInit(): void {

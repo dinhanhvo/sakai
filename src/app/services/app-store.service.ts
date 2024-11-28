@@ -54,6 +54,8 @@ export class AppStoreService {
 
     setAuth(auth: { accessToken: string; tokenType: string; username: string; id: number}) {
         this.auth = auth;
+        this.bAuth = true;
+        sessionStorage.setItem('isAuthenticated', String(this.bAuth));
         console.log('------- save to session: ' + auth.accessToken)
         sessionStorage.setItem('accessToken', auth.accessToken);
     }
@@ -86,6 +88,7 @@ export class AppStoreService {
 
   logout() {
     this.bAuth = false;
+    sessionStorage.setItem('isAuthenticated', String(this.bAuth));
     sessionStorage.setItem('auth', <string>{});
 
     this.data = {};
