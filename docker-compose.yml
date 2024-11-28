@@ -17,5 +17,10 @@ services:
         build:
             context: .
             dockerfile: docker-prime-sakai-fe
+            args:
+                ENVIRONMENT: ${ENVIRONMENT:-production}
         ports:
-            - "90:80"
+            - "91:80"
+        environment:
+            - ENVIRONMENT=${ENVIRONMENT:-production}
+        restart: always
