@@ -4,6 +4,10 @@ import { NotfoundComponent } from './demo/components/notfound/notfound.component
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import {LoginComponent} from "./demo/components/auth/login/login.component";
 import {ProjectComponent} from "./layout/components/project/project.component";
+import {TaskComponent} from "./layout/components/task/task.component";
+import {ValidateComponent} from "./demo/components/validate/validate.component";
+import {RegisterComponent} from "./demo/components/register/register.component";
+import {authGuard} from "./services/auth.guard";
 
 @NgModule({
     imports: [
@@ -18,7 +22,16 @@ import {ProjectComponent} from "./layout/components/project/project.component";
                     { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
-                    { path: 'project', component: ProjectComponent},
+                    // { path: 'project', component: ProjectComponent},
+                    { path: '', redirectTo: '/projects', pathMatch: 'full' },
+                    {
+                        path: 'projects',
+                        loadChildren: () => import('./layout/components/project/project.module').then(m => m.ProjectModule),
+                        canActivate: [authGuard]
+                    },
+                    { path: 'task', component: TaskComponent},
+                    { path: 'account', component: RegisterComponent},
+                    { path: 'test', component: ValidateComponent}
                 ]
             },
             { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },

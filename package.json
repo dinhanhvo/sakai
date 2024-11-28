@@ -9,7 +9,7 @@
         "start:staging": "ng serve --configuration staging",
         "start:local": "ng serve --configuration local",
         "start:dev": "ng serve --configuration development",
-        "build": "ng build  --configuration production",
+        "build:sakai-ng": "ng build  --configuration production",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"

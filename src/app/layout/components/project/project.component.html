@@ -16,7 +16,12 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="projects" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProjects" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="projects" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+                     [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
+                     [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                     [(selection)]="selectedProjects" selectionMode="multiple" [rowHover]="true" dataKey="id"
+            >
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Manage Projects</h5>
@@ -46,20 +51,26 @@
                         </td>
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">Name</span>
-                            {{project.name}}
+<!--                            {{project.name}}-->
+                            <a
+                                (click)="navigateToProjectDetail(project.id)"
+                                style="text-decoration: underline; color: blue; cursor: pointer;"
+                            >
+                                {{ project.name }}
+                            </a>
                         </td>
                         <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Category</span>
+                            <span class="p-column-title">description</span>
                             {{project.description}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.ownerId}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">owner</span>
+                            {{project.owner}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.createdAt}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">createdAt</span>
+                            {{project.createdAt | date: 'short'}}
                         </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{project.updatedAt}}
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">updatedAt</span>
+                            {{project.updatedAt | date: 'medium'}}
                         </td>
                         <td>
                             <div class="flex">
@@ -83,12 +94,17 @@
                     <label for="description">Description</label>
                     <textarea id="description" pInputTextarea [(ngModel)]="project.description" required rows="3" cols="20"></textarea>
                 </div>
-
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProject()"></button>
+<!--                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>-->
+<!--                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProject()"></button>-->
+                <div class="flex flex-wrap gap-3 justify-content-center">
+                    <p-button label="Cancel" severity="secondary" icon="pi pi-times" (onClick)="hideDialog()"/>
+                    <p-button label="Save" severity="success" icon="pi pi-check"
+                              (onClick)="saveProject()"
+                    />
+                </div>
             </ng-template>
         </p-dialog>
 

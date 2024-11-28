@@ -1,0 +1,79 @@
+<!--<p-card header="Register Account" style="width: 100%; margin: 0 auto;">-->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="p-grid">
+            <div class="field">
+                <label for="name">Name</label>
+                <input
+                    id="name"
+                    type="text"
+                    pInputText
+                    formControlName="name"
+                    [ngClass]="{'ng-invalid': isSubmitted && name.errors?.['required']}"
+                />
+                <small *ngIf="isSubmitted && name.errors?.['required']" class="p-error">
+                    Username is required.
+                </small>
+                <small *ngIf="isSubmitted && name.errors?.['minlength']" class="p-error">
+                    Name must be at least 5 characters long.
+                </small>
+            </div>
+        <!-- Username -->
+        <div class="field">
+            <label for="username">Username</label>
+            <input
+                id="username"
+                type="text"
+                pInputText
+                formControlName="username"
+                [ngClass]="{'ng-invalid': isSubmitted && username.errors?.['required']}"
+            />
+            <small *ngIf="isSubmitted && username.errors?.['required']" class="p-error">
+                Username is required.
+            </small>
+            <small *ngIf="isSubmitted && username.errors?.['minlength']" class="p-error">
+                Username must be at least 5 characters long.
+            </small>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+            <label for="email">Email</label>
+            <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                [ngClass]="{'ng-invalid': isSubmitted && email.errors?.['required']}"
+            />
+            <small *ngIf="isSubmitted && email.errors?.['required']" class="p-error">
+                Email is required.
+            </small>
+            <small *ngIf="isSubmitted && email.errors?.['email']" class="p-error">
+                Invalid email format.
+            </small>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+            <label for="password">Password</label>
+            <input
+                id="password"
+                type="password"
+                pPassword
+                formControlName="password"
+                [ngClass]="{'ng-invalid': isSubmitted && password.errors?.['required']}"
+            />
+            <small *ngIf="isSubmitted && password.errors?.['required']" class="p-error">
+                Password is required.
+            </small>
+            <small *ngIf="isSubmitted && password.errors?.['minlength']" class="p-error">
+                Password must be at least 6 characters long.
+            </small>
+        </div>
+
+        <!-- Submit Button -->
+        <div class=" flex flex-wrap gap-3 justify-content-center">
+            <p-button label="Create Account" severity="success" />
+        </div>
+        </div>
+    </form>

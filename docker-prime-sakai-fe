@@ -1,0 +1,39 @@
+# Stage 1: Build Angular App
+FROM node:20-alpine3.17 AS builder
+
+# Tạo thư mục làm việc cho frontend
+WORKDIR /frontend
+
+# Sao chép package.json và package-lock.json để cài đặt dependencies
+#COPY angular.json tsconfig.json tsconfig.app.json package.json package-lock.json /frontend/
+#RUN npm install
+
+# Sao chép toàn bộ mã nguồn Angular vào container
+#COPY . /frontend/
+#COPY ./src/environments /frontend/environments
+#RUN ls ./src/environments/
+
+RUN apk add --no-cache git
+
+RUN git clone https://github.com/dinhanhvo/sakai.git
+RUN cp -rf sakai/*.* .
+RUN npm install
+
+# Build ứng dụng Angular ở chế độ production
+#RUN npm install -g @angular/cli@17
+RUN npm run build:sakai-ng --configuration production
+
+# Stage 2: Serve Angular App with Nginx
+FROM nginx:alpine
+
+# Sao chép file build Angular từ stage 1 vào Nginx
+COPY --from=builder /frontend/dist/sakai-ng /usr/share/nginx/html
+
+# Sao chép cấu hình Nginx
+COPY --from=builder /frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80 to make the application accessible
+EXPOSE 80
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,30 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
+    <div class="field">
+        <label for="username">Username</label>
+        <input id="username" pInputText formControlName="username" />
+        <small *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="p-error">
+            Username is required and must be at least 4 characters long.
+        </small>
+    </div>
+
+    <div class="field">
+        <label for="email">Email</label>
+        <input id="email" pInputText formControlName="email" />
+        <small *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="p-error">
+            Please enter a valid email address.
+        </small>
+    </div>
+
+    <div class="field">
+        <label for="password">Password</label>
+        <input id="password" pInputText formControlName="password" type="password" />
+        <small *ngIf="form.get('password')?.hasError('weakPassword') && form.get('password')?.touched" class="p-error">
+            Password must contain at least one number, one uppercase, and one lowercase letter.
+        </small>
+        <small *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched" class="p-error">
+            Password is required.
+        </small>
+    </div>
+
+    <p-button label="Submit" type="submit" [disabled]="form.invalid"></p-button>
+</form>
