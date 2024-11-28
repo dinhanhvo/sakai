@@ -5,8 +5,8 @@ FROM node:20-alpine3.17 AS builder
 WORKDIR /frontend
 
 # Sao chép package.json và package-lock.json để cài đặt dependencies
-COPY angular.json tsconfig.json tsconfig.app.json package.json package-lock.json /frontend/
-RUN npm install
+#COPY angular.json tsconfig.json tsconfig.app.json package.json package-lock.json /frontend/
+#RUN npm install
 
 # Sao chép toàn bộ mã nguồn Angular vào container
 #COPY . /frontend/
@@ -16,11 +16,12 @@ RUN npm install
 RUN apk add --no-cache git
 
 RUN git clone https://github.com/dinhanhvo/sakai.git
-RUN cp -rf sakai/* .
+RUN cp -rf sakai/*.* .
+RUN npm install
 
 # Build ứng dụng Angular ở chế độ production
-RUN npm install -g @angular/cli@17
-RUN ng build --configuration production
+#RUN npm install -g @angular/cli@17
+RUN npm run build:sakai-ng --configuration production
 
 # Stage 2: Serve Angular App with Nginx
 FROM nginx:alpine
