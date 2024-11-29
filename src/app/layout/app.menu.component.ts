@@ -31,12 +31,14 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Account', icon: 'pi pi-pw pi-user', routerLink: ['/account']
-                    },
-                    {
-                        label: 'Test', icon: 'pi pi-pw pi-share-alt', routerLink: ['/test']
                     }
+                    ,
+                    // {
+                    //     label: 'Test', icon: 'pi pi-pw pi-share-alt', routerLink: ['/test']
+                    // }
                 ]
             },
+            /*
             {
                 label: 'UI Components',
                 items: [
@@ -177,6 +179,7 @@ export class AppMenuComponent implements OnInit {
                     }
                 ]
             }
+            */
         ];
     }
 }

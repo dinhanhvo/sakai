@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
                 // if (response type of )
                 this.appStore.setAuth(response)
 
-                this.router.navigate(["project"])
+                this.router.navigate(["projects"])
             },
             complete: () => {},
             error: err => {}
