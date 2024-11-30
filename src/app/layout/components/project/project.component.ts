@@ -146,7 +146,7 @@ export class ProjectComponent implements OnInit {
                 console.log('-------- project response: ', response)
 
                 // this.projects[this.findIndexById(this.project.id)] = pro
-                this.projects.splice(this.findIndexById(this.project.id), 0)
+                this.projects.splice(this.findIndexById(this.project.id), 1)
                 this.projects = this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project deleted', life: 3000 });
                 this.deleteProjectDialog = false;
