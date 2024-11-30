@@ -80,6 +80,8 @@ export class ProjectComponent implements OnInit {
     rowsPerPageOptions = [5, 10, 20];
     form: FormGroup;
 
+    searchText: string = '';
+
     constructor(private projectService: ProjectService,
                 private messageService: MessageService,
                 private router: Router,
@@ -242,9 +244,9 @@ export class ProjectComponent implements OnInit {
     onGlobalFilter(table: Table, event: Event) {
         // table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
         console.log("---------------- search by name: ", event.target)
-        this.projectService.getProjectsByName("go").subscribe({
+        this.projectService.getProjectsByName(this.searchText).subscribe({
             next: (response: any) => {
-                console.log('-------- login response: ', response)
+                console.log('-------- getProjectsByName response: ', response)
                 this.projects = response
                 this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
             },
