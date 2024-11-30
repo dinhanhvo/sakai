@@ -149,14 +149,14 @@ export class ProjectComponent implements OnInit {
                 this.projects.splice(this.findIndexById(this.project.id), 0)
                 this.projects = this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project deleted', life: 3000 });
-                this.projectDialog = false;
+                this.deleteProjectDialog = false;
             },
             complete: () => {
-                this.projectDialog = false;
+                this.deleteProjectDialog = false;
                 this.project = {};
             },
             error: err => {
-                this.projectDialog = false;
+                this.deleteProjectDialog = false;
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Can not add project' });
             }
         })
@@ -240,7 +240,17 @@ export class ProjectComponent implements OnInit {
     }
 
     onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+        // table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+        console.log("---------------- search by name: ", event.target)
+        this.projectService.getProjectsByName("go").subscribe({
+            next: (response: any) => {
+                console.log('-------- login response: ', response)
+                this.projects = response
+                this.projects.sort((pr1, pr2) => this.compareTime(pr1.updatedAt, pr2.updatedAt));
+            },
+            complete: () => {},
+            error: err => {}
+        })
     }
 
     // Custom Validator

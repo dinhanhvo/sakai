@@ -11,6 +11,7 @@ import {BaseService} from "../../../services/base.service";
 export class ProjectService {
 
     private API_PROJECT = '/project'
+    private API_PROJECTS = '/projects'
 
     constructor(private http: HttpClient,
                 private baseService: BaseService) { }
@@ -25,8 +26,13 @@ export class ProjectService {
         return this.baseService.getData(`${this.API_PROJECT}` + '/detail/' + `${id}`);
     }
 
+    getProjectsByName(name: string) {
+        return this.baseService.getData(`${this.API_PROJECTS}` + '/search?name=' + `${name}`);
+    }
+
+
     getProjects() {
-        return this.baseService.getData('/projects');
+        return this.baseService.getData(this.API_PROJECTS);
     }
 
     public newProject(project: Project) {
